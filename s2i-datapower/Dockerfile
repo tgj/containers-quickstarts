@@ -20,12 +20,11 @@ ENV STI_SCRIPTS_PATH="/usr/local/s2i" \
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH 
 COPY ./usr/bin/fixpermissions.sh /usr/bin 
 
-RUN useradd -u 1001 -r -g 0 -s /sbin/nologin \
-      -c "Default Application User" default && \
-    mkdir -p $WORKDIR/local && \
-    mkdir -p $WORKDIR/config && \
-    chmod a+x /usr/bin/fixpermissions.sh
-    chmod a+x $STI_SCRIPTS_PATH/*
+RUN /bin/busybox adduser -u 1001 -G 0 -s /sbin/nologin default && \
+    /bin/busybox mkdir -p $WORKDIR/local && \
+    /bin/busybox mkdir -p $WORKDIR/config && \
+    /bin/busybox chmod a+x /usr/bin/fixpermissions.sh
+    /bin/busybox chmod a+x $STI_SCRIPTS_PATH/*
     fixpermissions.sh $WORKDIR/local && \
     fixpermissions.sh $WORKDIR/config && \
     fixpermissions.sh drouter/local && \
