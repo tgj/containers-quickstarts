@@ -20,7 +20,7 @@ ENV STI_SCRIPTS_PATH="/usr/local/s2i" \
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH 
 COPY ./usr/bin/fixpermissions.sh /usr/bin 
 
-RUN /bin/busybox adduser -u 1001 -G root -s /sbin/nologin default && \
+RUN /bin/busybox adduser -u 1001 -G root -D -H -s /sbin/nologin default && \
     /bin/busybox mkdir -p $WORKDIR/local && \
     /bin/busybox mkdir -p $WORKDIR/config && \
     /bin/busybox chmod a+x /usr/bin/fixpermissions.sh
