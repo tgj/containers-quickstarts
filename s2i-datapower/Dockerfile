@@ -17,13 +17,15 @@ ENV STI_SCRIPTS_PATH="/usr/local/s2i" \
     DATAPOWER_ACCEPT_LICENSE="true"
 
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
-COPY ./s2i/bin/ $STI_SCRIPTS_PATH \
-     ./usr/bin/fixpermissions /usr/bin 
+COPY ./s2i/bin/ $STI_SCRIPTS_PATH 
+COPY ./usr/bin/fixpermissions /usr/bin 
 
 RUN useradd -u 1001 -r -g 0 -s /sbin/nologin \
       -c "Default Application User" default && \
     mkdir -p $WORKDIR/local && \
     mkdir -p $WORKDIR/config && \
+    chmod a+x /usr/bin/fixpermissions
+    chmod a+x $STI_SCRIPTS_PATH/*
     fixpermissions $WORKDIR/local && \
     fixpermissions $WORKDIR/config && \
     fixpermissions drouter/local && \
