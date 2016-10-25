@@ -18,18 +18,18 @@ ENV STI_SCRIPTS_PATH="/usr/local/s2i" \
 
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH 
-COPY ./usr/bin/fixpermissions /usr/bin 
+COPY ./usr/bin/fixpermissions.sh /usr/bin 
 
 RUN useradd -u 1001 -r -g 0 -s /sbin/nologin \
       -c "Default Application User" default && \
     mkdir -p $WORKDIR/local && \
     mkdir -p $WORKDIR/config && \
-    chmod a+x /usr/bin/fixpermissions
+    chmod a+x /usr/bin/fixpermissions.sh
     chmod a+x $STI_SCRIPTS_PATH/*
-    fixpermissions $WORKDIR/local && \
-    fixpermissions $WORKDIR/config && \
-    fixpermissions drouter/local && \
-    fixpermissions drouter/config
+    fixpermissions.sh $WORKDIR/local && \
+    fixpermissions.sh $WORKDIR/config && \
+    fixpermissions.sh drouter/local && \
+    fixpermissions.sh drouter/config
    
 WORKDIR $WORKDIR  
     
