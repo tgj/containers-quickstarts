@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - name: mariadb
-        image: mariadb
+        image: 172.30.53.244:5000/mariadb-demo/mariadb-ha:latest
         ports:
         - containerPort: 3306
           name: mariadb
