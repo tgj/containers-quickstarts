@@ -9,6 +9,7 @@ spec:
   ports:
   - port: 3306
     name: mariadb
+  clusterIP: None  
   selector:
     app: mariadb-ha
 ---
@@ -30,6 +31,7 @@ spec:
         ports:
         - containerPort: 3306
           name: mariadb
+        env:  
         - name: POD_NAME
           valueFrom:
             fieldRef:
@@ -41,7 +43,11 @@ spec:
         - name: POD_IP
           valueFrom:
             fieldRef:
-              fieldPath: status.podIP  
+              fieldPath: status.podIP
+        - name: POD_PREFIX
+          value: mariadb_ha
+        - name: HEADLESS_SVC_NAME
+          value: mariadb_ha        
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql

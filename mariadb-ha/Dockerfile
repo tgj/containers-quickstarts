@@ -1,7 +1,6 @@
-FROM registry.access.redhat.com/rhel
+FROM million12/mariadb
 
-COPY ./mariadb.repo /etc/yum.repos.d/
-
-RUN yum update -y && yum install -y MariaDB-server MariaDB-client atomic-openshift-clients && yum clean all
+RUN yum install -y bind-utils && yum clean all
+COPY ./run.sh /
 
 CMD ["./run.sh"]
