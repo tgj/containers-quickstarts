@@ -2,6 +2,7 @@
 
 set -e
 set -u
+set -vx
 source ./mariadb-functions.sh
 
 # User-provided env variables
