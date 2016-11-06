@@ -52,6 +52,8 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
+      serviceAccount: mariadb-ha-sa
+      serviceAccountName: mariadb-ha-sa    
   volumeClaimTemplates:
   - metadata:
       name: data

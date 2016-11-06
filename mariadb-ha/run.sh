@@ -21,10 +21,10 @@ install_db
 tail -F $ERROR_LOG & # tail all db logs to stdout 
 
 #If it's the first instance and there are no other instances running
-if [ "$POD_NAME" == "$POD_PREFIX-1" && "`nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | wc -l`" -le "1" ]
+if [ "$POD_NAME" == "$POD_PREFIX-0" && "`nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | wc -l`" -le "1" ]
 #then initialize the cluster
 	/usr/bin/mysqld_safe --wsrep-new-cluster &
-elif
+else
 #else join the cluster
 	pets=nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | awk '{print $7}' | sed 's/.$//'
 	pets=$( IFS=$','; echo "${pets[*]}" )
