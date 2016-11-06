@@ -2,7 +2,7 @@
 
 #set -e
 set -u
-#set -vx
+set -vx
 source ./mariadb-functions.sh
 
 echo 'runnung as:' `whoami` 
