@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#set -e
+set -e
 set -u
-set -vx
+#set -vx
 source ./mariadb-functions.sh
 
 echo 'runnung as:' `whoami` 
@@ -23,7 +23,7 @@ install_db
 tail -F $ERROR_LOG & # tail all db logs to stdout 
 
 #If it's the first instance and there are no other instances running
-if [ "$POD_NAME" == "$POD_PREFIX-0" && "`nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | wc -l`" -le "1" ]; then
+if [ "$POD_NAME" == "$POD_PREFIX-0" ] && [ "`nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | wc -l`" -le "1" ]; then
 #then initialize the cluster
 	/usr/bin/mysqld_safe --wsrep-new-cluster &
 else
