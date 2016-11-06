@@ -5,6 +5,8 @@ set -u
 set -vx
 source ./mariadb-functions.sh
 
+echo 'runnung as:' `whoami` 
+
 # User-provided env variables
 MARIADB_USER=${MARIADB_USER:="admin"}
 MARIADB_PASS=${MARIADB_PASS:-$(pwgen -s 12 1)}
@@ -21,7 +23,7 @@ install_db
 tail -F $ERROR_LOG & # tail all db logs to stdout 
 
 #If it's the first instance and there are no other instances running
-if [ "$POD_NAME" == "$POD_PREFIX-0" && "`nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | wc -l`" -le "1" ]
+if [ "$POD_NAME" == "$POD_PREFIX-0" && "`nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | wc -l`" -le "1" ]; then
 #then initialize the cluster
 	/usr/bin/mysqld_safe --wsrep-new-cluster &
 else
