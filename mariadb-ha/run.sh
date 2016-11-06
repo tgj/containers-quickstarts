@@ -28,7 +28,7 @@ if [ "$POD_NAME" == "$POD_PREFIX-0" ] && [ "`nslookup -type=srv $HEADLESS_SVC_NA
 	/usr/bin/mysqld_safe --wsrep-new-cluster &
 else
 #else join the cluster
-	pets=nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | awk '{print $7}' | sed 's/.$//'
+	pets=`nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | awk '{print $7}' | sed 's/.$//'`
 	pets=$( IFS=$','; echo "${pets[*]}" )
 	/usr/bin/mysqld_safe --gcomm://$pets &
 fi
