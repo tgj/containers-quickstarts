@@ -8,7 +8,6 @@ COPY ./fix-permissions.sh ./
 RUN chmod +x /run.sh /fix-permissions.sh
 
 RUN ./fix-permissions.sh /var/lib/mysql/   && \
-    ./fix-permissions.sh /var/log/mariadb/ && \
     ./fix-permissions.sh /var/run/
 
 # Place VOLUME statement below all changes to /var/lib/mysql
