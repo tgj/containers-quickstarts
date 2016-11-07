@@ -46,7 +46,7 @@ spec:
             fieldRef:
               fieldPath: status.podIP
         - name: POD_PREFIX
-          value: mariadb_ha
+          value: mariadb-ha
         - name: HEADLESS_SVC_NAME
           value: mariadb_ha        
         volumeMounts:
@@ -54,11 +54,11 @@ spec:
           mountPath: /var/lib/mysql
       serviceAccount: mariadb-ha-sa
       serviceAccountName: mariadb-ha-sa    
-  volumeClaimTemplates:
-  - metadata:
-      name: data
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
+#  volumeClaimTemplates:
+#  - metadata:
+#      name: data
+#    spec:
+#      accessModes: [ "ReadWriteOnce" ]
+#      resources:
+#        requests:
+#          storage: 1Gi
