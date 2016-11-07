@@ -14,8 +14,8 @@ RUN ./fix-permissions.sh /var/lib/mysql/   && \
 # Place VOLUME statement below all changes to /var/lib/mysql
 VOLUME /var/lib/mysql
 
-# By default will run as random user on openshift and the mysql user (27)
+# By default will run as random user on openshift and the mysql user (997)
 # everywhere else
-USER 27
+USER 997
 
 CMD ["./run.sh"]
