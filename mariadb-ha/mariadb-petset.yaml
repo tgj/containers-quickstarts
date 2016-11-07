@@ -17,7 +17,6 @@ apiVersion: apps/v1alpha1
 kind: PetSet
 metadata:
   name: mariadb-ha
- 
 spec:
   serviceName: mariadb-ha
   replicas: 3
@@ -35,6 +34,8 @@ spec:
         ports:
         - containerPort: 3306
           name: mariadb
+        - containerPort: 4567
+          name: galera        
         env:  
         - name: POD_NAME
           valueFrom:
@@ -51,7 +52,7 @@ spec:
         - name: POD_PREFIX
           value: mariadb-ha
         - name: HEADLESS_SVC_NAME
-          value: mariadb_ha 
+          value: mariadb-ha 
         - name: MARIADB_USER
           value: admin           
         - name: MARIADB_PASS

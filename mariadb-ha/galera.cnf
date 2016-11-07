@@ -1,0 +1,7 @@
+
+wsrep_provider
+binlog_format=ROW
+default_storage_engine=InnoDB
+innodb_autoinc_lock_mode=2
+innodb_doublewrite=1
+wsrep_on=ON

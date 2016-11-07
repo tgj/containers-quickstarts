@@ -4,6 +4,7 @@ RUN yum install -y bind-utils && yum clean all
 
 COPY ./run.sh /
 COPY ./fix-permissions.sh ./
+COPY ./galera.cnf /etc/my.cnf.d
 
 RUN chmod +x /run.sh /fix-permissions.sh
 
