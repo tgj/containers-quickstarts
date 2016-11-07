@@ -17,6 +17,7 @@ apiVersion: apps/v1alpha1
 kind: PetSet
 metadata:
   name: mariadb-ha
+ 
 spec:
   serviceName: mariadb-ha
   replicas: 3
@@ -24,6 +25,8 @@ spec:
     metadata:
       labels:
         app: mariadb-ha
+      annotations:
+        pod.alpha.kubernetes.io/initialized: "true" 
     spec:
       containers:
       - name: mariadb
