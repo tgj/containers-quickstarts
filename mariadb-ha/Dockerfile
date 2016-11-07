@@ -8,7 +8,8 @@ COPY ./fix-permissions.sh ./
 RUN chmod +x /run.sh /fix-permissions.sh
 
 RUN ./fix-permissions.sh /var/lib/mysql/   && \
-    ./fix-permissions.sh /var/run/
+    ./fix-permissions.sh /var/run/ && \
+    usermod -a -G root mysql
 
 # Place VOLUME statement below all changes to /var/lib/mysql
 VOLUME /var/lib/mysql
