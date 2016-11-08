@@ -6,10 +6,10 @@ set -eu
 
 [ -f ${CONTAINER_SCRIPTS_PATH}/validate-variables.sh ] && source ${CONTAINER_SCRIPTS_PATH}/validate-variables.sh
 
-pets=`nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | awk '{print $7}' | sed 's/.$//'`
-echo pets1 $pets
-pets=$( IFS=$','; echo "${pets[*]}" )
-echo pets1 $pets
+export PETS=`nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | awk '{print $7}' | sed 's/.$//'`
+echo pets1 $PETS
+PETS=$( IFS=$','; echo "${PETS[*]}" )
+echo pets1 $PETS
 
 # Process the MySQL configuration files
 log_info 'Processing MySQL configuration files ...'
@@ -42,15 +42,17 @@ fi
 shutdown_local_mysql
 
 ## galera-specific
-first= [ "$POD_NAME" == "$POD_PREFIX-0" ] && [ "`nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | wc -l`" -le "1" ]
-echo first #first
-
+export IS_FIRST= [ "$POD_NAME" == "$POD_PREFIX-0" -a "`nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | wc -l`" -le "1" ]
+echo is_first $IS_FIRST
 
 unset_env_vars
+
+echo is_first after unset $IS_FIRST
+
 log_volume_info $MYSQL_DATADIR
 log_info 'Running final exec -- Only MySQL server logs after this point'
 
-if [ $first ]; then
+if [ $IS_FIRST ]; then
   exec ${MYSQL_PREFIX}/libexec/mysqld --wsrep-new-cluster --defaults-file=$MYSQL_DEFAULTS_FILE "$@" 2>&1
 else
   exec ${MYSQL_PREFIX}/libexec/mysqld --defaults-file=$MYSQL_DEFAULTS_FILE "$@" 2>&1

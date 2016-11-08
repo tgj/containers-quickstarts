@@ -43,7 +43,7 @@ wsrep_provider=none
 wsrep_cluster_name="my_wsrep_cluster"
 
 # Group communication system handle
-wsrep_cluster_address=gcomm://${pets}
+wsrep_cluster_address=gcomm://${PETS}
 
 # Human-readable node name (non-unique). Hostname by default.
 #wsrep_node_name=
