@@ -35,7 +35,13 @@ spec:
         - containerPort: 3306
           name: mariadb
         - containerPort: 4567
-          name: galera        
+          name: galera
+        - containerPort: 4568
+          name: ist
+        - containerPort: 4444
+          name: sst                    
+        cmd:
+        - "run-mysqld-galera"          
         env:  
         - name: POD_NAME
           valueFrom:
@@ -61,16 +67,16 @@ spec:
           value: mydb
         - name: MYSQL_ROOT_PASSWORD
           value: root                            
-#        volumeMounts:
-#        - name: data
-#          mountPath: /var/lib/mysql
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mysql/data
       serviceAccount: mariadb-ha-sa
       serviceAccountName: mariadb-ha-sa    
-#  volumeClaimTemplates:
-#  - metadata:
-#      name: data
-#    spec:
-#      accessModes: [ "ReadWriteOnce" ]
-#      resources:
-#        requests:
-#          storage: 1Gi
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi

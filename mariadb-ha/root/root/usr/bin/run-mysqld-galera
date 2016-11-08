@@ -1,0 +1,57 @@
+#!/bin/bash
+
+export_vars=$(cgroup-limits); export $export_vars
+source ${CONTAINER_SCRIPTS_PATH}/common.sh
+set -eu
+
+[ -f ${CONTAINER_SCRIPTS_PATH}/validate-variables.sh ] && source ${CONTAINER_SCRIPTS_PATH}/validate-variables.sh
+
+pets=`nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | awk '{print $7}' | sed 's/.$//'`
+echo pets1 $pets
+pets=$( IFS=$','; echo "${pets[*]}" )
+echo pets1 $pets
+
+# Process the MySQL configuration files
+log_info 'Processing MySQL configuration files ...'
+envsubst < ${CONTAINER_SCRIPTS_PATH}/my-base.cnf.template > /etc/my.cnf.d/base.cnf
+envsubst < ${CONTAINER_SCRIPTS_PATH}/my-paas.cnf.template > /etc/my.cnf.d/paas.cnf
+envsubst < ${CONTAINER_SCRIPTS_PATH}/my-tuning.cnf.template > /etc/my.cnf.d/tuning.cnf
+envsubst < ${CONTAINER_SCRIPTS_PATH}/my-galera.cnf.template > /etc/my.cnf.d/galera.cnf
+
+echo printing galera.cnf
+echo ###################
+cat /etc/my.cnf.d/galera.cnf
+echo ###################
+
+if [ ! -d "$MYSQL_DATADIR/mysql" ]; then
+  initialize_database "$@"
+else
+  start_local_mysql "$@"
+fi
+
+if [ -f ${CONTAINER_SCRIPTS_PATH}/passwd-change.sh ]; then
+  log_info 'Setting passwords ...'
+  source ${CONTAINER_SCRIPTS_PATH}/passwd-change.sh
+fi
+if [ -f ${CONTAINER_SCRIPTS_PATH}/post-init.sh ]; then
+  log_info 'Sourcing post-init.sh ...'
+  source ${CONTAINER_SCRIPTS_PATH}/post-init.sh
+fi
+
+# Restart the MySQL server with public IP bindings
+shutdown_local_mysql
+
+## galera-specific
+first= [ "$POD_NAME" == "$POD_PREFIX-0" ] && [ "`nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | wc -l`" -le "1" ]
+echo first #first
+
+
+unset_env_vars
+log_volume_info $MYSQL_DATADIR
+log_info 'Running final exec -- Only MySQL server logs after this point'
+
+if [ $first ]; then
+  exec ${MYSQL_PREFIX}/libexec/mysqld --wsrep-new-cluster --defaults-file=$MYSQL_DEFAULTS_FILE "$@" 2>&1
+else
+  exec ${MYSQL_PREFIX}/libexec/mysqld --defaults-file=$MYSQL_DEFAULTS_FILE "$@" 2>&1
+fi
