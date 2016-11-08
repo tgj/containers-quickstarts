@@ -30,7 +30,7 @@ spec:
       containers:
       - name: mariadb
         imagePullPolicy: Always
-        image: 172.30.53.244:5000/mariadb-demo/mariadb-ha:latest
+        image: 172.30.53.244:5000/mariadb-ha/mariadb-ha:latest
         ports:
         - containerPort: 3306
           name: mariadb
@@ -68,9 +68,7 @@ spec:
           value: root                            
         volumeMounts:
         - name: data
-          mountPath: /var/lib/mysql/data
-      serviceAccount: mariadb-ha-sa
-      serviceAccountName: mariadb-ha-sa    
+          mountPath: /var/lib/mysql/data    
   volumeClaimTemplates:
   - metadata:
       name: data
