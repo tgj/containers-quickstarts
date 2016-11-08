@@ -53,10 +53,14 @@ spec:
           value: mariadb-ha
         - name: HEADLESS_SVC_NAME
           value: mariadb-ha 
-        - name: MARIADB_USER
+        - name: MYSQL_USER
           value: admin           
-        - name: MARIADB_PASS
-          value: admin        
+        - name: MYSQL_PASSWORD
+          value: admin  
+        - name: MYSQL_DATABASE
+          value: mydb
+        - name: MYSQL_ROOT_PASSWORD
+          value: root                            
 #        volumeMounts:
 #        - name: data
 #          mountPath: /var/lib/mysql

@@ -37,6 +37,14 @@ deploy the mariadb in ha
 oc create -f https://raw.githubusercontent.com/raffaelespazzoli/containers-quickstarts/mariadb-ha/mariadb-ha/mariadb-petset.yaml
 ```
 
+# Second Attempt
+
+build the images based on centos
+```
+oc new-build https://github.com/sclorg/mariadb-container --name=rhsclmariadb --strategy-docker --context=10.1 
+
+oc new-build https://github.com/raffaelespazzoli/containers-quickstarts#mariadb-ha --strategy=docker --context-dir=mariadb-ha --name=mariadb-ha -i rhsclmariadb
+```
 
 
 
