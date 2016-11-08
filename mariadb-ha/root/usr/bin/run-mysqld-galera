@@ -6,10 +6,11 @@ set -eu
 
 [ -f ${CONTAINER_SCRIPTS_PATH}/validate-variables.sh ] && source ${CONTAINER_SCRIPTS_PATH}/validate-variables.sh
 
-export PETS=`nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | awk '{print $7}' | sed 's/.$//'`
+PETS=`nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | awk '{print $7}' | sed 's/.$//'`
 echo pets1 $PETS
 PETS=$( IFS=$','; echo "${PETS[*]}" )
 echo pets1 $PETS
+export PETS
 
 # Process the MySQL configuration files
 log_info 'Processing MySQL configuration files ...'
@@ -42,7 +43,8 @@ fi
 shutdown_local_mysql
 
 ## galera-specific
-export IS_FIRST= [ "$POD_NAME" == "$POD_PREFIX-0" -a "`nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | wc -l`" -le "1" ]
+[ "$POD_NAME" == "$POD_PREFIX-0" -a "`nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | wc -l`" -le "1" ]
+export IS_FIRST=$?
 echo is_first $IS_FIRST
 
 unset_env_vars
