@@ -43,9 +43,11 @@ fi
 shutdown_local_mysql
 
 ## galera-specific
+set +e
 [ "$POD_NAME" == "$POD_PREFIX-0" -a "`nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | wc -l`" -le "1" ]
 export IS_FIRST=$?
 echo is_first $IS_FIRST
+set -e
 
 unset_env_vars
 
