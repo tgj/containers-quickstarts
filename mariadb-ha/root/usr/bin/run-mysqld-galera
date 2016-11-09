@@ -57,7 +57,7 @@ log_volume_info $MYSQL_DATADIR
 log_info 'Running final exec -- Only MySQL server logs after this point'
 
 if [ $IS_FIRST ]; then
-  exec ${MYSQL_PREFIX}/libexec/mysqld --wsrep-new-cluster --defaults-file=$MYSQL_DEFAULTS_FILE "$@" 2>&1
+  exec ${MYSQL_PREFIX}/libexec/mysqld --defaults-file=$MYSQL_DEFAULTS_FILE --wsrep-new-cluster "$@" 2>&1
 else
   exec ${MYSQL_PREFIX}/libexec/mysqld --defaults-file=$MYSQL_DEFAULTS_FILE "$@" 2>&1
 fi
