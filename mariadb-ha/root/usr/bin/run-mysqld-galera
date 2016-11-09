@@ -9,7 +9,7 @@ set -eu
 PETS=`nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | awk '{print $7}' | sed 's/.$//'`
 echo pets1 $PETS
 PETS=$( IFS=$','; echo "${PETS[*]}" )
-echo pets1 $PETS
+echo pets2 $PETS
 export PETS
 
 # Process the MySQL configuration files
