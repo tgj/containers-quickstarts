@@ -1,5 +1,18 @@
 #!/bin/bash
 
+function annotate_pod_as_initialized() {
+  echo annotating pod $POD_NAME as initialzied
+  #Request Body: {"metadata":{"annotations":{"pod.alpha.kubernetes.io/initialized":"true"}}}
+  #curl -k -v -XPATCH  -H "Accept: application/json, */*" -H "Content-Type: application/strategic-merge-patch+json" -H "User-Agent: oc/v1.3.0+52492b4 (linux/amd64) kubernetes/52492b4" -H "Authorization: Bearer 2k-hQcHeRrMZc1i7yb_uLP_dOXCBhI0I4cemWv-bgP8" https://localhost:8443/api/v1/namespaces/mariadb-ha/pods/mariadb-ha-0
+  #PATCH https://localhost:8443/api/v1/namespaces/mariadb-ha/pods/mariadb-ha-0 200 OK in 23 milliseconds
+  token= `cat /var/run/secrets/kubernetes.io/serviceaccount/token`
+  curl -k -v -XPATCH  -H "Accept: application/json, */*" -H "Content-Type: application/strategic-merge-patch+json" -H "Authorization: Bearer $token" https://localhost:8443/api/v1/namespaces/mariadb-ha/pods/$POD_NAME -d {"metadata":{"annotations":{"pod.alpha.kubernetes.io/initialized":"true"}}}
+  
+  
+  
+  echo annotated pod $POD_NAME as initialized
+}
+
 export_vars=$(cgroup-limits); export $export_vars
 source ${CONTAINER_SCRIPTS_PATH}/common.sh
 set -eu
@@ -19,10 +32,10 @@ envsubst < ${CONTAINER_SCRIPTS_PATH}/my-paas.cnf.template > /etc/my.cnf.d/paas.c
 envsubst < ${CONTAINER_SCRIPTS_PATH}/my-tuning.cnf.template > /etc/my.cnf.d/tuning.cnf
 envsubst < ${CONTAINER_SCRIPTS_PATH}/my-galera.cnf.template > /etc/my.cnf.d/galera.cnf
 
-echo printing galera.cnf
-echo ###################
-cat /etc/my.cnf.d/galera.cnf
-echo ###################
+#echo printing galera.cnf
+#echo ###################
+#cat /etc/my.cnf.d/galera.cnf
+#echo ###################
 
 if [ ! -d "$MYSQL_DATADIR/mysql" ]; then
   initialize_database "$@"
@@ -61,3 +74,6 @@ if [ $IS_FIRST ]; then
 else
   exec ${MYSQL_PREFIX}/libexec/mysqld --defaults-file=$MYSQL_DEFAULTS_FILE "$@" 2>&1
 fi
+
+wait_for_mysql_master
+annotate_pod_as_initialized
