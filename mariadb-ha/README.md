@@ -25,12 +25,14 @@ create a new build with the maria db image
 
 ```
 oc new-build https://github.com/raffaelespazzoli/containers-quickstarts#mariadb-ha --strategy=docker --context-dir=mariadb-ha --name=mariadb-ha
+
+oc new-build --name=mariadb-ha --strategy=docker --binary=true
+oc start-build mariadb-ha --from-dir=.
 ```
 
 create necessary service account, this should go away
 ```
-oc create serviceaccount mariadb-ha-sa
-oc adm policy add-scc-to-user nonroot system:serviceaccount:mariadb-ha:mariadb-ha-sa
+oc policy add-role-to-user edit system:serviceaccount:mariadb-ha:default
 ```
 deploy the mariadb in ha
 ```

@@ -30,7 +30,7 @@ spec:
       containers:
       - name: mariadb
         imagePullPolicy: Always
-        image: 172.30.53.244:5000/mariadb-ha/mariadb-ha:latest
+        image: 172.30.144.245:5000/mariadb-ha/mariadb-ha:latest
         ports:
         - containerPort: 3306
           name: mariadb
