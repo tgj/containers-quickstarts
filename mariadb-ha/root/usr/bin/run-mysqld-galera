@@ -79,11 +79,16 @@ export WSREP_PROVIDER=/opt/rh/rh-mariadb101/root/usr/lib64/galera/libgalera_smm.
 ## adding galera cluster config
 envsubst < ${CONTAINER_SCRIPTS_PATH}/my-galera.cnf.template > /etc/my.cnf.d/galera.cnf
 
+# echo printing galera.cnf
+#echo ###################
+# cat /etc/my.cnf.d/galera.cnf
+#echo ###################
+
 ## galera-specific
 set +e
 [ "$POD_NAME" == "$POD_PREFIX-0" -a "`nslookup -type=srv $HEADLESS_SVC_NAME | grep '=' | wc -l`" -le "1" ]
 export IS_FIRST=$?
-# echo is_first $IS_FIRST
+echo is_first $IS_FIRST
 set -e
 
 unset_env_vars
@@ -93,7 +98,7 @@ unset_env_vars
 log_volume_info $MYSQL_DATADIR
 log_info 'Running final exec -- Only MySQL server logs after this point'
 
-if [ $IS_FIRST ]; then
+if [ $IS_FIRST -eq 0 ]; then
   ${MYSQL_PREFIX}/libexec/mysqld --defaults-file=$MYSQL_DEFAULTS_FILE --wsrep-new-cluster "$@" 2>&1 &
   mysql_pid=$!
 else
