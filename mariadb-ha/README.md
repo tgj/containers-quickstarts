@@ -72,6 +72,6 @@ oc expose service locust --port=8089
 # use chaos monkey to kill db pods
 
 ```
-oc create -f https:// ...
+oc create -f https://raw.githubusercontent.com/raffaelespazzoli/containers-quickstarts/mariadb-ha/mariadb-ha/chaos-monkey-2.2.149.json
 oc new-app chaos-monkey --name=chaos-monkey --param='CHAOS_MONKEY_INCLUDES=mariadb-ha-*'
 ```

@@ -84,7 +84,6 @@
           } ],
           "imagePullSecrets" : [ ],
           "nodeSelector" : { },
-          "serviceAccountName" : "fabric8",
           "volumes" : [ ]
         }
       }
