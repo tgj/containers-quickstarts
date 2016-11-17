@@ -1,16 +1,23 @@
 # MySQL HA
 
 This project shows how to build a mysql HA implementation in OpenShift.
-We will use the mariadb form of MySQL and the galera project now part of mariadb
-Here is the architecture of a MySQL Ha implementation with mariadb and galera.
+We will use the mariadb form of MySQL and the galera project now part of mariadb.
 
+If we try to scale mariadb instances with a replication controller in order to achieve HA we get in the state shown in the below image. 
 
+![](media/Mariadb-ha-rc.png "")
 
-<< add picture here>>
+This mode of operation, where multiple instances of mariadb share the same storage is not supported and will not work.
+Mariadb offers several approaches to achieving high availability.
+What we are going to show in this demo is a multi-master approach with realtime replication.
+Multiple mariadb instances are active at the same time in read/write mode and each has its own storage.
+They coordinate to keep the storages in synch.
+This feature is provided by galera.
+The client can connect to either instances or all of them if it is managing a connection pool.
+This architecture can be implemented in OpenShift with PetSet.
+The following diagram represent this approach.
 
-And here is how this can be implemented in OpenShift
-
-<<add second picture here>>
+![](media/Mariadb-ha-petset.png "")
 
 Note: This project uses PetSets currently not in tech preview (i.e. not supported) in OpenShift.
 
@@ -39,6 +46,10 @@ oc policy add-role-to-user edit system:serviceaccount:mariadb-ha:default
 deploy the mariadb in ha
 ```
 oc create -f https://raw.githubusercontent.com/raffaelespazzoli/containers-quickstarts/mariadb-ha/mariadb-ha/mariadb-petset.yaml
+```
+if needed here is how you scale a petset:
+```
+oc patch petset mariadb-ha -p '{"spec":{"replicas":3}}'
 ```
 
 ## install a sample app to use the db
@@ -73,5 +84,5 @@ oc expose service locust --port=8089
 
 ```
 oc create -f https://raw.githubusercontent.com/raffaelespazzoli/containers-quickstarts/mariadb-ha/mariadb-ha/chaos-monkey-2.2.149.json
-oc new-app chaos-monkey --name=chaos-monkey --param='CHAOS_MONKEY_INCLUDES=mariadb-ha-*'
+oc new-app chaos-monkey --name=chaos-monkey --param='CHAOS_MONKEY_INCLUDES=mariadb-ha-*' --param='CHAOS_MONKEY_KILL_FREQUENCY_SECONDS=120'
 ```
