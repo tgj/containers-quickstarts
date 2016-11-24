@@ -78,6 +78,7 @@ oc autoscale dc/todolist --min=2 --max=5 --cpu-percent=80
 
 Create the load generator
 ```
+oc adm policy add-scc-to-user anyuid system:serviceaccount:mariadb-ha:default
 oc create configmap test-file --from-file=./locustfile.py
 oc new-app hakobera/locust -e LOCUST_MODE=master -e TARGET_URL=http://todolist:8080 SCENARIO_FILE=/test/locustfile.py --name=locust
 oc volume dc/locust --add -m /test --configmap-name=test-file
