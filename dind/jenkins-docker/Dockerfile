@@ -1,5 +1,5 @@
 
-FROM openshift/jenkins-slave-base-rhel7
+FROM registry.access.redhat.com/openshift/jenkins-slave-base-rhel7
 
 MAINTAINER Raffaele Spazzoli <rspazzol@redhat.com>
 
