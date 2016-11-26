@@ -17,7 +17,7 @@ ENV MAVEN_VERSION=3.0.5
 
 USER root
 
-COPY /docker-repo /etc/yum.repos.d/
+COPY /docker.repo /etc/yum.repos.d/
 
 # Install docker-engine
 RUN ls -la /etc/yum.repos.d && \
