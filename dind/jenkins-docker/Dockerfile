@@ -20,7 +20,8 @@ USER root
 COPY /docker-repo /etc/yum.repos.d/
 
 # Install docker-engine
-RUN yum clean all -y && \
+RUN ls -la /etc/yum.repos.d && \
+    yum clean all -y && \
     yum-config-manager --disable "*" && \
     yum-config-manager --enable dockerrepo rhel-7-server-rpms rhel-7-server-optional-rpms rhel-7-server-extras-rpms rhel-7-server-ose-3.3-rpms && \
     INSTALL_PKGS="docker-engine" && \
