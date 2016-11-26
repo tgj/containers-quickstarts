@@ -21,7 +21,7 @@ RUN yum clean all && \
     INSTALL_PKGS="docker" && \
     yum install -y $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS && \
-    yum clean all -y && \
+    yum clean all -y
 
 RUN chown -R 1001:0 $HOME && \
     chmod -R g+rw $HOME
