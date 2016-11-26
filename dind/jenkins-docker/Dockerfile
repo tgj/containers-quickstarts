@@ -16,7 +16,7 @@ LABEL com.redhat.component="jenkins-slave-docker-rhel7-docker" \
 ENV MAVEN_VERSION=3.0.5
 
 # Install Maven
-RUN yum-config-manager --enable "rhel-7-server-rpms rhel-7-server-optional-rpms rhel-7-server-extras-rpms rhel-7-server-ose-3.3-rpms" && \
+RUN yum-config-manager --enable rhel-7-server-rpms rhel-7-server-optional-rpms rhel-7-server-extras-rpms rhel-7-server-ose-3.3-rpms && \
     INSTALL_PKGS="docker" && \
     yum install -y $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS && \
