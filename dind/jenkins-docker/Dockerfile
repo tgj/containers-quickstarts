@@ -15,12 +15,15 @@ LABEL com.redhat.component="jenkins-slave-docker-rhel7-docker" \
 
 ENV MAVEN_VERSION=3.0.5
 
-COPY /docker-repo /etc/yum.repos.d
+USER root
+
+COPY /docker-repo /etc/yum.repos.d/
 
 # Install docker-engine
 RUN yum clean all && \
     yum-config-manager --enable rhel-7-server-rpms rhel-7-server-optional-rpms rhel-7-server-extras-rpms rhel-7-server-ose-3.3-rpms && \
     INSTALL_PKGS="docker-engine" && \
+    yum update -y && \
     yum install -y $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS && \
     yum clean all -y
