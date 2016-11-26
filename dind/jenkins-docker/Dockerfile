@@ -22,9 +22,9 @@ COPY /docker-repo /etc/yum.repos.d/
 # Install docker-engine
 RUN ls /etc/yum.repos.d && \
     yum clean all && \
+    yum-config-manager --disable "*"
     yum-config-manager --enable dockerrepo rhel-7-server-rpms rhel-7-server-optional-rpms rhel-7-server-extras-rpms rhel-7-server-ose-3.3-rpms && \
     INSTALL_PKGS="docker-engine" && \
-    yum erase -y docker docker-selunix docker-common && \
     yum update -y && \
     yum install -y $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS && \
