@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftNewApp
+  creationTimestamp: null
+  generation: 11
+  labels:
+    app: docker
+  name: docker
+spec:
+  replicas: 1
+  selector:
+    app: docker
+    deploymentconfig: docker
+  strategy:
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      annotations:
+        openshift.io/container.docker.image.entrypoint: '["docker-entrypoint.sh","sh"]'
+        openshift.io/generated-by: OpenShiftNewApp
+      creationTimestamp: null
+      labels:
+        app: docker
+        deploymentconfig: docker
+    spec:
+      containers:
+      - command:
+        - dockerd
+        - -H
+        - tcp://0.0.0.0:2375
+        - --insecure-registry
+        - docker-registry.default.svc.cluster.local:5000
+        - --ip-forward=false
+        - --ip-masq=false
+        - --iptables=false
+        - --storage-driver=vfs
+        image: docker@sha256:83795a384fd7321e1a58d06c2fa2b86a0f0ce9e4a75c91aa382317b3c453671d
+        imagePullPolicy: Always
+        name: docker
+        ports:
+        - containerPort: 2375
+          protocol: TCP
+        resources: {}
+        securityContext:
+          privileged: true
+        terminationMessagePath: /dev/termination-log
+        volumeMounts:
+        - mountPath: /var/lib/docker
+          name: volume-p0u2v
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      securityContext: {}
+      serviceAccount: docker
+      serviceAccountName: docker
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - emptyDir: {}
+        name: volume-p0u2v
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - docker
+      from:
+        kind: ImageStreamTag
+        name: docker:latest
+        namespace: jenkins2
+    type: ImageChange
