@@ -17,8 +17,16 @@ ENV MAVEN_VERSION=3.0.5
 
 # Install Maven
 RUN yum clean all && \
+    tee /etc/yum.repos.d/docker.repo <<-'EOF'
+	[dockerrepo]
+	name=Docker Repository
+	baseurl=https://yum.dockerproject.org/repo/main/centos/7/
+	enabled=1
+	gpgcheck=1
+	gpgkey=https://yum.dockerproject.org/gpg
+	EOF && \
     yum-config-manager --enable rhel-7-server-rpms rhel-7-server-optional-rpms rhel-7-server-extras-rpms rhel-7-server-ose-3.3-rpms && \
-    INSTALL_PKGS="docker" && \
+    INSTALL_PKGS="docker-engine" && \
     yum install -y $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS && \
     yum clean all -y
