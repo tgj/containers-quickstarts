@@ -20,17 +20,24 @@ spec:
   strategy:
     jenkinsPipelineStrategy:
       jenkinsfile: |-
-        stage 'build'
-        //https://go.cloudbees.com/docs/cloudbees-documentation/cje-user-guide/index.html#docker-workflow
-
-        docker.withServer("https://docker:2735") {
-            docker.withRegistry("https://docker-registry.default.svc.cluster.local:5000") {
-                docker.image("project1/img").pull
-            }
-            docker.image("project/img").tag
-            docker.withRegistry("https://docker-registry.default.svc.cluster.local:5000"){
-                docker.image("project/img").push
-            }
+        node('docker-jenkins-slave') {
+            stage 'pull'
+            //https://go.cloudbees.com/docs/cloudbees-documentation/cje-user-guide/index.html#docker-workflow
+            
+            sh 'oc login -p admin -u admin --insecure-skip-tls-verify=true https://kubernetes.default.svc.cluster.local:443'
+            
+            sh 'docker -H docker:2375 login -p `oc whoami -t` -u admin -e me@me.com 172.30.144.245:5000'
+            
+            sh 'cat /home/jenkins/.docker/config.json'
+            
+            sh 'docker --config=/home/jenkins/.docker -H docker:2375 pull 172.30.144.245:5000/jenkins2/docker:latest'
+            
+            stage 'push'    
+            
+            //login to other server
+            sh 'docker -H docker:2375 tag 172.30.144.245:5000/jenkins2/docker:latest 172.30.144.245:5000/jenkins2/docker:ciao'
+            sh 'docker -H docker:2375 push 172.30.144.245:5000/jenkins2/docker:ciao'
+            
         }
     type: JenkinsPipeline
   triggers: []
