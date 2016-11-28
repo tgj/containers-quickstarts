@@ -1,10 +1,10 @@
 
-FROM registry.access.redhat.com/openshift3/jenkins-slave-base-rhel7
+FROM openshift/jenkins-slave-base-centos7
 
 MAINTAINER Raffaele Spazzoli <rspazzol@redhat.com>
 
 # Labels consumed by Red Hat build service
-LABEL com.redhat.component="jenkins-slave-docker-rhel7-docker" \
+LABEL com.redhat.component="jenkins-slave-docker-centos-docker" \
       name="openshift3/jenkins-slave-docker-rhel7" \
       version="3.3" \
       architecture="x86_64" \
@@ -17,11 +17,13 @@ USER root
 
 COPY /docker.repo /etc/yum.repos.d/
 
+#    yum-config-manager --disable "*" && \
+#    yum-config-manager --enable dockerrepo rhel-7-server-rpms rhel-7-server-optional-rpms rhel-7-server-extras-rpms rhel-7-server-ose-3.3-rpms && \
+
+
 # Install docker-engine
 RUN ls -la /etc/yum.repos.d && \
     yum clean all -y && \
-    yum-config-manager --disable "*" && \
-    yum-config-manager --enable dockerrepo rhel-7-server-rpms rhel-7-server-optional-rpms rhel-7-server-extras-rpms rhel-7-server-ose-3.3-rpms && \
     INSTALL_PKGS="docker-engine" && \
     yum update -y && \
     yum install -y $INSTALL_PKGS && \
