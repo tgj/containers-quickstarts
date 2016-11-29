@@ -16,6 +16,7 @@ LABEL com.redhat.component="jenkins-slave-skopeo-rhel7" \
 USER root
 
 COPY /skopeo /usr/bin/
+COPY /policy.json /etc/containers/
 
 RUN chown -R 1001:0 $HOME && \
     chmod -R g+rw $HOME
