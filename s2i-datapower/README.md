@@ -123,7 +123,7 @@ oc new-build https://github.com/raffaelespazzoli/containers-quickstarts#datapowe
 oc create service account datapower
 oc adm policy add-scc-to-user anyuid -z datapower
 #oc new-app --docker-image=ibmcom/datapower:7.5.2.0.281259 -e DATAPOWER_ACCEPT_LICENSE=true -e DATAPOWER_WORKER_THREADS=4 --name=datapower
-oc new-app s2i-datapower -e DATAPOWER_ACCEPT_LICENSE=true -e DATAPOWER_WORKER_THREADS=4 --name=datapower
+oc new-app --docker-image=datapower/s2i-datapower -e DATAPOWER_ACCEPT_LICENSE=true -e DATAPOWER_WORKER_THREADS=4 --name=datapower
 #oc patch dc/datapower --patch '{"spec":{"template":{"spec":{"containers": [ {"name": "datapower"},{"ports": [ {"containerPort": "9090"},{"containerPort": "9022" },{"containerPort": "5554" } ,{"containerPort": "8000"}]}]}}}}'
 oc patch dc/datapower --patch '{"spec":{"template":{"spec":{"serviceAccountName": "datapower"}}}}'
 oc expose dc datapower

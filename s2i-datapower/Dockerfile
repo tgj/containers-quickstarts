@@ -37,4 +37,4 @@ EXPOSE 9090 9022 5554 8080
     
 USER 1001
 
-CMD ["$STI_SCRIPTS_PATH/run"]
+CMD ["/bin/busybox","$STI_SCRIPTS_PATH/run"]
