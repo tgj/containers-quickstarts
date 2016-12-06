@@ -1,4 +1,4 @@
-FROM ibmcom/datapower:7.5.2.0.281259
+FROM ibmcom/datapower:7.5.2
 
 MAINTAINER Raffaele Spazzoli <rspazzol@redhat.com>
 
@@ -19,6 +19,7 @@ ENV STI_SCRIPTS_PATH="/usr/local/s2i" \
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH 
 COPY ./usr/bin/fixpermissions.sh /usr/bin 
+COPY ./auto-startup.cfg /drouter/config
 
 RUN /bin/busybox adduser -u 1001 -G root -D -H -s /sbin/nologin default && \
     /bin/busybox mkdir -p $WORKDIR/local && \
@@ -27,8 +28,8 @@ RUN /bin/busybox adduser -u 1001 -G root -D -H -s /sbin/nologin default && \
     /bin/busybox chmod a+x $STI_SCRIPTS_PATH/* && \
     fixpermissions.sh $WORKDIR/local && \
     fixpermissions.sh $WORKDIR/config && \
-    fixpermissions.sh drouter/local && \
-    fixpermissions.sh drouter/config
+    fixpermissions.sh /drouter/local && \
+    fixpermissions.sh /drouter/config
    
 WORKDIR $WORKDIR  
     

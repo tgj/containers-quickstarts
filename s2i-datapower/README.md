@@ -1,13 +1,12 @@
-oc new-build https://github.com/raffaelespazzoli/containers-quickstarts#datapower --context-dir=s2i-datapower --name=s2i-datapower --strategy=docker
+
 
 
  docker run --priviliged=true -it -v $PWD/config:/drouter/config -v $PWD/local:/drouter/local -e DATAPOWER_ACCEPT_LICENSE=true -e DATAPOWER_INTERACTIVE=true -p 9090:9090 -p 9022:22 -p 5554:5554 -p 8000-8010:8000-8010 --name idg ibmcom/datapower
-``` 
+ 
  
 #artifactory
 https://www.jfrog.com/confluence/display/RTF/Running+Artifactory+OSS 
  
-``` 
 cat << EOF | oc create -f - 
 {
   "apiVersion": "v1",
@@ -47,12 +46,12 @@ oc patch dc/artifactory --patch '{"spec":{"template":{"spec":{"serviceAccountNam
 oc volume dc/artifactory --add -m /var/opt/jfrog/artifactory/data --claim-name=artifactory-data -n artifactory
 oc volume dc/artifactory --add -m /var/opt/jfrog/artifactory/etc --claim-name=artifactory-etc -n artifactory
 oc expose svc artifactory
-```
+
 add persistent storage
 
 #cassandra
 https://hub.docker.com/r/anderssv/openshift-cassandra/
-```
+
 oc policy add-role-to-user view system:serviceaccount:cassandra:default
 
 cat << EOF | oc create -f -
@@ -114,22 +113,20 @@ spec:
         - name: cassandra-data
           emptyDir: {}
 EOF
-```
+
 #datapower
+
+
 ```
-cat << EOF | oc create -f - 
-{
-  "apiVersion": "v1",
-  "kind": "ServiceAccount",
-  "metadata": {
-    "name": "datapower"
-  }
-}
-EOF
-oc adm policy add-scc-to-user anyuid -z datapower -n datapower-demo
-oc new-app --docker-image=ibmcom/datapower:7.5.2.0.281259 -e DATAPOWER_ACCEPT_LICENSE=true -e DATAPOWER_WORKER_THREADS=4 --name=datapower
-oc patch dc/datapower --patch '{"spec":{"template":{"spec":{"containers": [ {"name": "datapower"},{"ports": [ {"containerPort": "9090"},{"containerPort": "9022" },{"containerPort": "5554" } ,{"containerPort": "8000"}]}]}}}}'
+oc new-build https://github.com/raffaelespazzoli/containers-quickstarts#datapower --context-dir=s2i-datapower --name=s2i-datapower --strategy=docker
+
+oc create service account datapower
+oc adm policy add-scc-to-user anyuid -z datapower
+#oc new-app --docker-image=ibmcom/datapower:7.5.2.0.281259 -e DATAPOWER_ACCEPT_LICENSE=true -e DATAPOWER_WORKER_THREADS=4 --name=datapower
+oc new-app s2i-datapower -e DATAPOWER_ACCEPT_LICENSE=true -e DATAPOWER_WORKER_THREADS=4 --name=datapower
+#oc patch dc/datapower --patch '{"spec":{"template":{"spec":{"containers": [ {"name": "datapower"},{"ports": [ {"containerPort": "9090"},{"containerPort": "9022" },{"containerPort": "5554" } ,{"containerPort": "8000"}]}]}}}}'
 oc patch dc/datapower --patch '{"spec":{"template":{"spec":{"serviceAccountName": "datapower"}}}}'
 oc expose dc datapower
-oc expose svc datapower --port=8000
+oc expose svc datapower --port=8080
 ```
+
