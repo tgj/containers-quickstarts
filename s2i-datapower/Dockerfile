@@ -5,8 +5,8 @@ MAINTAINER Raffaele Spazzoli <rspazzol@redhat.com>
 LABEL io.openshift.s2i.scripts-url=image:///usr/local/s2i \
       io.s2i.scripts-url=image:///usr/local/s2i \
       io.k8s.description="Platform for building and running IBM DataPower applications" \
-      io.k8s.display-name="DataPower 7.5.2.0.281259" \
-      io.openshift.expose-services="9090/tcp:console, 9022/tcp:ssh, 5554/tcp:rest, 8080/tcp:services" \
+      io.k8s.display-name="DataPower 7.5.2" \
+      io.openshift.expose-services=9090/tcp:console,9022/tcp:ssh,5554/tcp:rest,8080/tcp:services \
       io.openshift.tags="runner, builder, datapower" \
       io.openshift.s2i.destination="/tmp"
       
