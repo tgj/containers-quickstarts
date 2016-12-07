@@ -4,7 +4,7 @@ This project demonstrates how to create an s2i Datapower image to facilitate Dat
 
 ![IBM Datapower](https://avatars3.githubusercontent.com/u/8836442?v=3&s=200 "IBM Datapower")
 
-## create a project 
+## Create a Project 
 
 This is the project win which we will run the below commands, you can use a different project.
 
@@ -12,7 +12,14 @@ This is the project win which we will run the below commands, you can use a diff
 oc new-project datapower
 ```
 
-## create the s2i datapower image
+## Table of content
+
+* [Create the s2i-datapower Image](#create-the-s2i-datapower-image)
+* [The Experimentation Use Case](#the-experimentation-use-case)
+* [The Immutable Use Case](#the-immutable-use-case)
+* [Examples](#examples)
+
+## Create the s2i-datapower Image
 
 This commands will create a build config whose outout will be the s2i-datapower.
 
@@ -24,11 +31,14 @@ The s2i-datapower image supports two use cases:
 * experimentation 
 * immutable
 
-## The experimentation use case
+## The Experimentation Use Case
 
 In this use case the user connects to the datapower instance and creates the configurations using the web ui.
+
 The configurations are save in two persistent storage volumes (/drouter/config and /drouter/local)
+
 The expectation is that the configurations can be retrieved from the persistent volumes and use as an input for the s2i-datapower image in the immutable use case.
+
 This is just one possbile approach to creating configuration. Any approach is fine.
 
 to use the image in this mode issue the following commands
@@ -40,29 +50,42 @@ oc set volume dc/datapower --add -m /drouter/local --name datapower-local -t pvc
 oc create route passthrough datapower-svc --service datapower --port=8080
 oc create route passthrough datapower-console --service datapower --port=9090
 ``` 
-## The immutable mode
+
+You can use the following commads to extract the configuration from a running experimentation pod:
+```
+oc rsync <pod_name>:/drouter/config <your_project>/src/config
+oc rsync <pod_name>:/drouter/local <your_project>/src/local
+```
+
+
+## The Immutable Use Case
 
 In this mode we assume that the datapower configuration has been created and tested and that we will now use the image without changing the configuration, in line with the immutable infrastructure approach.
+
 To pass the desired configuration to the datapower we will use the s2i process.
-The s2i image expects the following structure for injected configuration:
+
+The s2i image expects the following structure for the injected configuration:
 
 * /src/config will contains the file that need to be in /drouter/config
 * /src/local will containe the files that need to be in /drouter/local  
 
-provided that you repo respects this layout you can create a datapower app this way:
+Provided that you repo respects this layout you can create a datapower app this way:
 
 ```
 oc new-app datapower/s2i-datapower~<your-repo> --name=mydatapower
 oc create route passthrough mydatapower-svc --service mydatapower --port=8080
 ```
 
-## examples
+## Examples
 
 To facilitate understanding how this s2i image works, here are some examples
 
 1. protecting an application with datapower via SSO with openshift
 2. protecting an application with datapower integrating via LDAP integration
   
+  
+  
+# Appendix  
 
 ## experiment datapower locally
 ```
