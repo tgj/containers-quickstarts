@@ -26,6 +26,10 @@ RUN /bin/busybox sh /usr/local/s2i/setup
 WORKDIR $WORKDIR  
 
 EXPOSE 9090 9022 5554 8080
+
+VOLUME /drouter/secure/sharedcerts
+VOLUME /drouter/config
+VOLUME /drouter/local
     
 USER 1001
 
