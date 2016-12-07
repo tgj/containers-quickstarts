@@ -1,18 +1,7 @@
-#!/bin/bash
+#!/bin/busybox sh
 
-echo copy anything in $WORKDIR/artifacts to dropins
-cp $WORKDIR/local/* /drouter/local/
-echo copy anything in $WORKDIR/config to config
-cp $WORKDIR/config/*  /drouter/config/
-
-if [ -d "$S2I_DESTINATION/src/local" ]; then
-  #echo copy anything in $S2I_DESTINATION/src/local to dropins
-  cp $S2I_DESTINATION/src/local/* /drouter/local/
-fi
-
-if [ -d "$S2I_DESTINATION/src/config" ]; then
-  #echo copy anything in $S2I_DESTINATION/src/config to dropins
-  cp $S2I_DESTINATION/src/config/* /drouter/config
-fi
+# the | true suppresses the error message if the directory is empty
+cp $S2I_DESTINATION/src/local/* /drouter/local | true
+cp $S2I_DESTINATION/src/config/* /drouter/config | true
 
 exit $rc

@@ -1,8 +1,10 @@
 #!/bin/bash
 
-if [ "$IMMUTABLE" = "true" ]; then
-  cp $WORKDIR/config/* /drouter/config
-fi
+#if [ "$IMMUTABLE" = "true" ]; then
+# the | true suppresses the error message if the directory is empty
+#  cp $WORKDIR/config/* /drouter/config
+#  cp $WORKDIR/local/* /drouter/local | true
+#fi
 
 if [ -z "/drouter/config" ]; then
   cp $WORKDIR/config/* /drouter/config

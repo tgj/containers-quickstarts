@@ -15,7 +15,6 @@ ENV STI_SCRIPTS_PATH="/usr/local/s2i" \
     S2I_DESTINATION="/tmp" \
     DATAPOWER_WORKER_THREADS="4" \
     DATAPOWER_ACCEPT_LICENSE="true" \
-    IMMUTABLE="true"
 
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH 
@@ -23,20 +22,12 @@ COPY ./usr/bin/fixpermissions.sh /usr/bin/
 COPY ./auto-startup.cfg /drouter/config/
 COPY ./auto-startup.cfg $WORKDIR/config/
 
-#RUN /bin/busybox adduser -u 1001 -G root -D -H -s /sbin/nologin default && \
-#    /bin/busybox mkdir -p $WORKDIR/local && \
-#    /bin/busybox mkdir -p $WORKDIR/config && \
-#    /bin/busybox chmod a+x /usr/bin/fixpermissions.sh && \
-#    /bin/busybox chmod a+x $STI_SCRIPTS_PATH/* && \
-#    fixpermissions.sh $WORKDIR/local && \
-#    fixpermissions.sh $WORKDIR/config && \
-#    fixpermissions.sh /drouter/local && \
-#    fixpermissions.sh /drouter/config
+RUN /bin/busybox sh /usr/local/s2i/setup
    
 WORKDIR $WORKDIR  
 
 EXPOSE 9090 9022 5554 8080
     
-# USER 1001
+USER 1001
 
 CMD ["/bin/busybox","sh","/usr/local/s2i/run"]
