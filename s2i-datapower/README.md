@@ -16,6 +16,15 @@ oc create service account datapower
 oc adm policy add-scc-to-user anyuid -z datapower
 oc new-app --docker-image=datapower/s2i-datapower -e DATAPOWER_ACCEPT_LICENSE=true -e DATAPOWER_WORKER_THREADS=4 --name=datapower
 oc patch dc/datapower --patch '{"spec":{"template":{"spec":{"serviceAccountName": "datapower"}}}}'
-oc expose svc datapower --port=8080
+oc set volume dc/datapower --add -m /drouter/config --name datapower-config -t pvc --claim-name=datapower-config --claim-size=1G
+oc set volume dc/datapower --add -m /drouter/local --name datapower-local -t pvc --claim-name=datapower-local --claim-size=1G
+oc create route passthrough datapower-svc --service datapower --port=8080
+oc create route passthrough datapower-console --service datapower --port=9090
+```
+enabling openshift sso for an application
+
+```
+oc create -f ???
+
 ```
 

@@ -1,3 +1,11 @@
 #!/bin/bash
 
-/bin/busybox /bin/drouter
+if [ "$IMMUTABLE" = "true" ]; then
+  /bin/busybox cp $WORKDIR/config/* /drouter/config
+fi
+
+if [ -z "/drouter/config" ]; then
+  /bin/busybox cp $WORKDIR/config/* /drouter/config
+fi
+
+/bin/drouter
