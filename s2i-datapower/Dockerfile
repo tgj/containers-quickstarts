@@ -17,10 +17,9 @@ ENV STI_SCRIPTS_PATH="/usr/local/s2i" \
     DATAPOWER_ACCEPT_LICENSE="true" 
 
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
-COPY ./s2i/bin/ $STI_SCRIPTS_PATH \
-     ./usr/bin/fixpermissions.sh /usr/bin/ \ 
-     ./auto-startup.cfg /drouter/config/ \
-     ./auto-startup.cfg $WORKDIR/config/ 
+COPY ./s2i/bin/ $STI_SCRIPTS_PATH 
+COPY ./usr/bin/fixpermissions.sh /usr/bin/ 
+COPY ./auto-startup.cfg $WORKDIR/config/
 
 RUN /bin/busybox sh /usr/local/s2i/setup
    
