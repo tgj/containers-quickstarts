@@ -6,3 +6,4 @@ chmod a+x $STI_SCRIPTS_PATH/* && \
 fixpermissions.sh $WORKDIR && \
 fixpermissions.sh /drouter && \
 fixpermissions.sh /opt
+fixpermissions.sh /root/secure
