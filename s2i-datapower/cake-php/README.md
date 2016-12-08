@@ -3,12 +3,12 @@
 create the php application in a new project
 ```
 oc new-project cake-datapower
-oc new-app template=cakephp-mysql-example
+oc new-app --template=cakephp-mysql-example
 ```
 
 delete the route to make the application unreachable from outside the cluster
 ```
-oc delete route cake-mysql-example
+oc delete route cakephp-mysql-example
 ```
 
 build the s2i image from the configuration that was previously created in experimentation mode and then stored in the src directory. This assume you have previously built the s2i-datapower image in the datapower project

@@ -69,8 +69,8 @@ To pass the desired configuration to the datapower we will use the s2i process.
 
 The s2i image expects the following structure for the injected configuration:
 
-* /src/config will contain the file that need to be in /drouter/config
-* /src/local will contain the files that need to be in /drouter/local  
+* <basedir>/config will contain the file that need to be in /drouter/config
+* <basedir>/local will contain the files that need to be in /drouter/local  
 
 Provided that you repo respects this layout you can create a datapower app this way:
 
