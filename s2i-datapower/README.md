@@ -4,6 +4,16 @@ This project demonstrates how to create an s2i Datapower image to facilitate Dat
 
 ![IBM Datapower](https://avatars3.githubusercontent.com/u/8836442?v=3&s=200 "IBM Datapower")
 
+## Table of content
+
+* [Create a Project ](#create-a-project)
+* [Create the s2i-datapower Image](#create-the-s2i-datapower-image)
+* [The Experimentation Use Case](#the-experimentation-use-case)
+* [The Immutable Use Case](#the-immutable-use-case)
+* [Examples](#examples)
+
+
+
 ## Create a Project 
 
 This is the project win which we will run the below commands, you can use a different project.
@@ -11,13 +21,6 @@ This is the project win which we will run the below commands, you can use a diff
 ```
 oc new-project datapower
 ```
-
-## Table of content
-
-* [Create the s2i-datapower Image](#create-the-s2i-datapower-image)
-* [The Experimentation Use Case](#the-experimentation-use-case)
-* [The Immutable Use Case](#the-immutable-use-case)
-* [Examples](#examples)
 
 ## Create the s2i-datapower Image
 
@@ -51,10 +54,10 @@ oc create route passthrough datapower-svc --service datapower --port=8080
 oc create route passthrough datapower-console --service datapower --port=9090
 ``` 
 
-You can use the following commads to extract the configuration from a running experimentation pod:
+You can use the following commands to extract the configuration from a running experimentation pod:
 ```
-oc rsync <pod_name>:/drouter/config <your_project>/src/config
-oc rsync <pod_name>:/drouter/local <your_project>/src/local
+oc rsync <pod_name>:/drouter/config <your_project>/src/
+oc rsync <pod_name>:/drouter/local <your_project>/src/
 ```
 
 
@@ -66,13 +69,13 @@ To pass the desired configuration to the datapower we will use the s2i process.
 
 The s2i image expects the following structure for the injected configuration:
 
-* /src/config will contains the file that need to be in /drouter/config
-* /src/local will containe the files that need to be in /drouter/local  
+* /src/config will contain the file that need to be in /drouter/config
+* /src/local will contain the files that need to be in /drouter/local  
 
 Provided that you repo respects this layout you can create a datapower app this way:
 
 ```
-oc new-app datapower/s2i-datapower~<your-repo> --name=mydatapower
+oc new-app datapower/s2i-datapower~<your-repo> --name=mydatapower -e DATAPOWER_ACCEPT_LICENSE=true -e DATAPOWER_WORKER_THREADS=4
 oc create route passthrough mydatapower-svc --service mydatapower --port=8080
 ```
 
@@ -80,10 +83,9 @@ oc create route passthrough mydatapower-svc --service mydatapower --port=8080
 
 To facilitate understanding how this s2i image works, here are some examples
 
-1. protecting an application with datapower via SSO with openshift
-2. protecting an application with datapower integrating via LDAP integration
-  
-  
+1. mediating cake-php with datapower
+2. protecting cake-php with datapower with SSO from openshift
+
   
 # Appendix  
 
