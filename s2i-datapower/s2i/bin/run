@@ -6,8 +6,9 @@
 #  cp $WORKDIR/local/* /drouter/local | true
 #fi
 
-if [ -z "/drouter/config" ]; then
+if [ ! "$(ls -A /drouter/config)" ]; then
   cp $WORKDIR/config/* /drouter/config
+  cp $WORKDIR/local/* /drouter/local | true
 fi
 
 /bin/drouter

@@ -15,7 +15,7 @@ build the s2i image from the configuration that was previously created in experi
 
 ```
 oc new-app datapower/s2i-datapower~https://github.com/raffaelespazzoli/containers-quickstarts#datapower --context-dir=s2i-datapower/cake-php --name=cake-php-frontend
-oc patch dc/cake-php-frontend --patch '{"spec":{"template":{"spec":{"containers": { "name" : "cake-php-frontend" , "command" : ["/bin/busybox","sh","/usr/local/s2i/run"] }}}}}'
+oc patch dc/cake-php-frontend --patch '{"spec":{"template":{"spec":{"containers": [ {  "name" : "cake-php-frontend" , "command" : ["/bin/busybox","sh","/usr/local/s2i/run"] }]}}}}'
 oc volume dc/cake-php-frontend --remove --name=cake-php-frontend-volume-1
 oc volume dc/cake-php-frontend --remove --name=cake-php-frontend-volume-2
 oc expose svc cake-php-frontend --port=8080
