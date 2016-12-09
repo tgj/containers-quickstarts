@@ -18,5 +18,6 @@ oc new-app datapower/s2i-datapower~https://github.com/raffaelespazzoli/container
 oc patch dc/cake-php-frontend --patch '{"spec":{"template":{"spec":{"containers": [ {  "name" : "cake-php-frontend" , "command" : ["/bin/busybox","sh","/usr/local/s2i/run"] }]}}}}'
 oc volume dc/cake-php-frontend --remove --name=cake-php-frontend-volume-1
 oc volume dc/cake-php-frontend --remove --name=cake-php-frontend-volume-2
+oc set probe dc/cake-php-frontend --readiness -- grep "Domain configured successfully." /drouter/temporary/log/diag-log
 oc expose svc cake-php-frontend --port=8080
 ```
