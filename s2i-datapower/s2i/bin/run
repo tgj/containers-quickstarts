@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/busybox sh
 
 #if [ "$IMMUTABLE" = "true" ]; then
 # the | true suppresses the error message if the directory is empty

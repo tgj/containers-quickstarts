@@ -1,3 +1,5 @@
+#!/bin/busybox sh
+
 adduser -u 1001 -G root -D -H -s /sbin/nologin default
 mkdir -p $WORKDIR/local
 mkdir -p $WORKDIR/config
