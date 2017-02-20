@@ -27,6 +27,8 @@ FROM oraclelinux:7-slim
 # ----------
 MAINTAINER Gerald Venzl <gerald.venzl@oracle.com>
 
+
+
 # Environment variables required for this build (do NOT change)
 # -------------------------------------------------------------
 ENV ORACLE_BASE=/opt/oracle \
@@ -48,32 +50,36 @@ ENV ORACLE_BASE=/opt/oracle \
 ENV INSTALL_DIR=$ORACLE_BASE/install \
     PATH=$ORACLE_HOME/bin:$ORACLE_HOME/OPatch/:/usr/sbin:$PATH \
     LD_LIBRARY_PATH=$ORACLE_HOME/lib:/usr/lib \
-    CLASSPATH=$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib
+    CLASSPATH=$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib   
 
 # Copy binaries
 # -------------
-COPY $INSTALL_FILE_1 $INSTALL_FILE_2 $INSTALL_RSP $PERL_INSTALL_FILE $SETUP_LINUX_FILE $CHECK_SPACE_FILE $INSTALL_DB_BINARIES_FILE $INSTALL_DIR/
+COPY $INSTALL_RSP $PERL_INSTALL_FILE $SETUP_LINUX_FILE $CHECK_SPACE_FILE $INSTALL_DB_BINARIES_FILE $INSTALL_DIR/
 COPY $RUN_FILE $START_FILE $CREATE_DB_FILE $CONFIG_RSP $PWD_FILE $ORACLE_BASE/
 
-RUN chmod ug+x $INSTALL_DIR/*.sh && \
+RUN yum clean all && yum install -y wget sudo && \
+    wget -O $INSTALL_DIR/linuxamd64_12102_database_1of2.zip http://rspazzol:8080/linuxamd64_12102_database_1of2.zip && \
+    wget -O $INSTALL_DIR/linuxamd64_12102_database_2of2.zip http://rspazzol:8080/linuxamd64_12102_database_2of2.zip && \
+    chmod ug+x $INSTALL_DIR/*.sh && \
     sync && \
     $INSTALL_DIR/$CHECK_SPACE_FILE && \
-    $INSTALL_DIR/$SETUP_LINUX_FILE
+    $INSTALL_DIR/$SETUP_LINUX_FILE && \
 
 # Install DB software binaries
-USER oracle
-RUN $INSTALL_DIR/$INSTALL_DB_BINARIES_FILE EE
+# USER oracle
+    sudo -E -u oracle $INSTALL_DIR/$INSTALL_DB_BINARIES_FILE EE && \
 
-USER root
-RUN $ORACLE_BASE/oraInventory/orainstRoot.sh && \
+# USER root
+    $ORACLE_BASE/oraInventory/orainstRoot.sh && \
     $ORACLE_HOME/root.sh && \
-    rm -rf $INSTALL_DIR
+    rm -rf $INSTALL_DIR && \
+    yum clean all
 
 USER oracle
 WORKDIR /home/oracle
 
 VOLUME ["$ORACLE_BASE/oradata"]
-VOLUME ["$ORACLE_BASE/install"]
+
 EXPOSE 1521 5500
     
 # Define default command to start Oracle Database. 
