@@ -1,6 +1,10 @@
 
 # create the base Oracle12c image
 
+http://www.oratraining.com/blog/2013/07/oracle-12c-12-1-rac-real-applications-cluster-installation-on-linux-virtual-machines-step-by-step-guide/
+
+https://github.com/Seth-Miller/12c-rac-docker
+
 There is no efficient way of doing this as an ioenshift build. You have to run this on alocal instance of docker and the upload the resulting image to your openshift registry.
 
 This build requires containers with at least 12GB, the deafult is 10GB
@@ -15,7 +19,7 @@ sudo systemctl start docker
 After this you can build the image, which requires a 12GB filesystem (make sure you have enough disk space).
 Run this to serve large oracle installation files:
 ```
-sudo setenforce 0 #Patch requested here.
+sudo setenforce 0 #Patch welcome here.
 docker run -p 8080:80 -v "$PWD":/usr/share/nginx/html:ro -d nginx:alpine
 ```
 build the oracle base image
@@ -28,6 +32,11 @@ docker build --rm -f Dockerfile.ee -t raffaelespazzoli/oracle-12c:12.1.0.2 .
 build the oracle rac image
 ```
 docker build --rm -t raffaelespazzoli/oracle-12c-rac:12.1.0.2 .
+```
+
+restablish selinux
+```
+sudo setenforce 1
 ```
 
 ```

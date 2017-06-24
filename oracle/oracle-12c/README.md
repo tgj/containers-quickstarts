@@ -1,0 +1,1 @@
+docker build -t raffaelespazzoli/oracledb -v /home/rspazzol/git/12c-rac-docker/oracledata/stage:/stage:ro -f Dockerfile.ee .
