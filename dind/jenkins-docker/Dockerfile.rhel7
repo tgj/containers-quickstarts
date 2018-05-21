@@ -29,6 +29,8 @@ RUN ls -la /etc/yum.repos.d && \
     yum clean all -y
 
 RUN chown -R 1001:0 $HOME && \
-    chmod -R g+rw $HOME
+    chmod -R g+rw $HOME && \
+    chown -R 1001:0 /etc/alternatives && \
+    chmod -R g+rw /etc/alternatives
 
 USER 1001
