@@ -26,7 +26,7 @@ RUN  yum install -y initscripts sudo yum-utils device-mapper-persistent-data lvm
 # Install docker-engine
 RUN ls -la /etc/yum.repos.d && \
     yum clean all -y && \
-    INSTALL_PKGS="docker-ce" && \
+    INSTALL_PKGS="docker-engine" && \
     yum update -y && \
     yum install -y $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS && \
