@@ -23,8 +23,6 @@ RUN  yum install -y sudo yum-utils device-mapper-persistent-data lvm2 && \
 #    yum-config-manager --disable "*" && \
 #    yum-config-manager --enable dockerrepo rhel-7-server-rpms rhel-7-server-optional-rpms rhel-7-server-extras-rpms rhel-7-server-ose-3.3-rpms && \
 
-RUN sudo systemctl start docker 
-
 # Install docker-engine
 RUN ls -la /etc/yum.repos.d && \
     yum clean all -y && \
@@ -38,5 +36,7 @@ RUN chown -R 1001:0 $HOME && \
     chmod -R g+rw $HOME && \
     chown -R 1001:0 /etc/alternatives && \
     chmod -R g+rw /etc/alternatives
+
+RUN sudo systemctl start docker 
 
 USER 1001
