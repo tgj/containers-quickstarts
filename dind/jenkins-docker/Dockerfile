@@ -17,9 +17,9 @@ USER root
 
 COPY /docker.repo /etc/yum.repos.d/
 
-RUN  yum install -y sudo yum-utils device-mapper-persistent-data lvm2 && \
+RUN  yum install -y initscripts sudo yum-utils device-mapper-persistent-data lvm2 && \
      yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-     
+
 #    yum-config-manager --disable "*" && \
 #    yum-config-manager --enable dockerrepo rhel-7-server-rpms rhel-7-server-optional-rpms rhel-7-server-extras-rpms rhel-7-server-ose-3.3-rpms && \
 
