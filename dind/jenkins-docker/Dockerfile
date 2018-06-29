@@ -23,7 +23,7 @@ COPY /docker.repo /etc/yum.repos.d/
 # Install docker-engine
 RUN ls -la /etc/yum.repos.d && \
     yum clean all -y && \
-    INSTALL_PKGS="docker-engine" && \
+    INSTALL_PKGS="docker-engine sudo" && \
     yum update -y && \
     yum install -y $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS && \
