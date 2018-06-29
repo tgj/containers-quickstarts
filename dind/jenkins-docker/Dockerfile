@@ -34,7 +34,4 @@ RUN chown -R 1001:0 $HOME && \
     chown -R 1001:0 /etc/alternatives && \
     chmod -R g+rw /etc/alternatives
 
-RUN systemctl enable docker.service
-RUN systemctl start docker 
-
 USER 1001
